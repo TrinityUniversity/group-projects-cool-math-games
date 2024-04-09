@@ -1,0 +1,35 @@
+@()
+
+@main("pictionary_login"){
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Pictionary Lobby</title>
+        <link rel="stylesheet" href="../../public/stylesheets/pictionary.css"></link>
+    </head>
+    <body>
+        
+        <div id="container">
+            <div id="lobby-container">
+                <h1>Pictionary Lobby</h1>
+                <div id="lobby-text">
+                    <p>
+                        Share the room code with your friends to invite them to the game!
+                    <br>Once everyone has joined, click the "Start Game" button to begin.
+                    </p>
+                </div>
+                <h2>Players in Lobby:</h2>
+                <ul id="player-list">
+                    <!-- Player names will be dynamically added here -->
+                    <li>Greg Gargleson</li>
+                    <li>Larry Larva</li>
+                </ul>
+                
+                <h2>Room Code: #12345</h2>
+                
+                <button id="start-button">Start Game</button>
+            </div>       
+        </div>
+    </body>
+    </html>
+}
