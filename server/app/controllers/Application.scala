@@ -9,7 +9,7 @@ import play.api.mvc._
 class Application @Inject()(cc: ControllerComponents) extends AbstractController(cc) {
 
   def home = Action {
-    Ok(views.html.pictionary_game())
+    Ok(views.html.homepage())
   }
 
   def login = TODO
