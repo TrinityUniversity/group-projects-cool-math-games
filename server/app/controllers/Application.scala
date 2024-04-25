@@ -12,7 +12,13 @@ class Application @Inject()(cc: ControllerComponents) extends AbstractController
     Ok(views.html.homepage())
   }
 
-  def login = TODO
+  def login = Action {
+    Ok(views.html.login())
+  }
+
+  def signup = Action {
+    Ok(views.html.create_account())
+  }
 
   def validateLogin = TODO
   def createUser = TODO
