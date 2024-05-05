@@ -12,14 +12,18 @@ class Application @Inject()(cc: ControllerComponents) extends AbstractController
     Ok(views.html.pictionary_game())
   }
 
-  def login = TODO
+  def login = Action {
+    Ok(views.html.login())
+  }
 
-  def validateLogin = TODO
-  def createUser = TODO
+
+
+  def validateLogin = ???
+  def createUser = ???
 
   // Will show all games 
-  def showGames = TODO
+  def showGames = ???
 
   // if logged in will show personal profile: previously played games, highscores, etc
-  def showProfile = TODO
+  def showProfile = ???
 }

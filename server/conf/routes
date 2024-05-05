@@ -5,9 +5,13 @@
 # Home page
 GET        /                             controllers.Application.home
 GET        /login                        controllers.Application.login
-POST       /validate                     controllers.Application.validateLogin
-POST       /signup                       controllers.Application.createUser
-GET        /games                        controllers.Application.showGames
+# POST       /validate                     controllers.Application.validateLogin
+# POST       /signup                       controllers.Application.createUser
+# GET        /games                        controllers.Application.showGames
+
+# Pictionary Pages
+GET       /pictionary                   controllers.PictionaryController.pictionary
+GET       /createLobby                  controllers.PictionaryController.createLobby
 
 # Prefix must match `play.assets.urlPrefix`
 GET        /assets/*file                 controllers.Assets.at(file)
