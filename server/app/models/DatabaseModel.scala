@@ -1,29 +1,31 @@
-import slick.jdbc.PostgresProfile.api._
-import scala.concurrent.ExecutionContext
-import models.Tables._
-import scala.concurrent.Future
-import org.mindrot.jbcrypt.BCrypt
+package models
 
-class DatabaseModel(db: Database)(implicit ec: ExecutionContext) {
-    def validateUser(username: String, password: String): Future[Tuple[Boolean,String,String]] = {
-        val matches = db.run(Users.filter(userRow => userRow.username === username && userRow.password === password).result)
-        matches.map(userRows => userRows.nonEmpty)
-    }
+// import slick.jdbc.PostgresProfile.api._
+// import scala.concurrent.ExecutionContext
+// import models.Tables._
+// import scala.concurrent.Future
+// import org.mindrot.jbcrypt.BCrypt
 
-    def getUserInfo(userid: Int): Future[List[String]] = {
-        ???
-    }
+// class DatabaseModel(db: Database)(implicit ec: ExecutionContext) {
+//     def validateUser(username: String, password: String): Future[Tuple[Boolean,String,String]] = {
+//         val matches = db.run(Users.filter(userRow => userRow.username === username && userRow.password === password).result)
+//         matches.map(userRows => userRows.nonEmpty)
+//     }
 
-    def createUser(username: String, password: String): Future[Boolean] = {
-        ???
-    }
+//     def getUserInfo(userid: Int): Future[List[String]] = {
+//         ???
+//     }
 
-    def getScore(userid: String, gameName: String): Future[Int] = {
-        ???
-    }
+//     def createUser(username: String, password: String): Future[Boolean] = {
+//         ???
+//     }
 
-    def updateScore(userid: String, gameName: String): Future[Int] = {
-        ???
-    }
+//     def getScore(userid: String, gameName: String): Future[Int] = {
+//         ???
+//     }
 
-}
+//     def updateScore(userid: String, gameName: String): Future[Int] = {
+//         ???
+//     }
+
+// }

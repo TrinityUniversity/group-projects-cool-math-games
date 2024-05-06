@@ -7,8 +7,9 @@
 # Home page
 GET        /                             controllers.Application.home
 GET        /login                        controllers.Application.login
-# POST       /validate                     controllers.Application.validateLogin
-# POST       /signup                       controllers.Application.createUser
+POST       /validate                     controllers.Application.validateLogin
+GET        /signup                       controllers.Application.signup
+POST       /createUser                   controllers.Application.createUser
 # GET        /games                        controllers.Application.showGames
 
 # Pictionary Pages
