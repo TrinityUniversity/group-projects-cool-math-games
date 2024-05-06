@@ -10,7 +10,7 @@ GET        /login                        controllers.Application.login
 POST       /validate                     controllers.Application.validateLogin
 GET        /signup                       controllers.Application.signup
 POST       /createUser                   controllers.Application.createUser
-# GET        /games                        controllers.Application.showGames
+GET        /profile                      controllers.Application.showProfile
 
 # Pictionary Pages
 GET       /pictionary                   controllers.PictionaryController.pictionary
