@@ -8,8 +8,13 @@
 //   port: 5432,
 // });
 
-def createUser = TODO
+class UserModel {
 
-def loginUser = TODO
+def createUser = ???
 
-def updateScore = TODO
+def loginUser = ???
+
+def updateScore = ???
+
+}
+

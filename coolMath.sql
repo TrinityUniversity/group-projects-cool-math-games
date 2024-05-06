@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS public.scores
     userid integer NOT NULL,
     gameid integer NOT NULL,
     score character varying COLLATE pg_catalog."default" NOT NULL,
-    CONSTRAINT scores_gameid_fkey FOREIGN KEY (gameid)
+    CONSTRAINT scores_gameid_fkey FOREIGN KEY (gameid),
         REFERENCES public.games (gameid) MATCH SIMPLE
     CONSTRAINT scores_userid_fkey FOREIGN KEY (userid)
         REFERENCES public.users (userid) MATCH SIMPLE
