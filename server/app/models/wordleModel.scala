@@ -61,8 +61,10 @@ class wordleGame(player:WordlePlayer,game_int:Int,targetWord:String,maxAttempt:I
 
     }
     def isLetter_placementCorrect(guess_word:String,target_word:String){
-
+        //targetWord_charList:List[Character];
+        //guessWord_charList:List[Character];
     }
+
     def nextAttempt() ={
         if(!(currentAttempt == 6)){
             currentAttempt += 1
