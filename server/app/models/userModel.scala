@@ -1,15 +1,30 @@
-// const { Pool } = require('pg');
+package models
 
-// const pool = new Pool({
-//   user: 'bennettmach',
-//   host: 'localhost',
-//   database: 'postgres',
-//   password: 'postgres',
-//   port: 5432,
-// });
+import scala.concurrent.ExecutionContext
+import play.api.mvc.ControllerComponents
+import play.api.db.slick.DatabaseConfigProvider
 
-// def createUser = TODO
+class UserModel @Inject() (protected val dbConfigProvider: DatabaseConfigProvider)(implicit ec: ExecutionContext) {
 
-// def loginUser = TODO
+    private val model = new DatabaseModel(db)
 
-// def updateScore = TODO
+    def getUserInfo(userid: Int): User {
+        
+    }
+
+    def validateUser(username: String, password: String): User {
+        val ret = model.validateLogin(username,password).map {
+
+        }   
+    }
+
+    def createUser(username: String, password: String): User {
+
+    }
+
+    def updateScore(userid: Int, game: String, score: Int): Boolean {
+
+    }
+}
+
+
