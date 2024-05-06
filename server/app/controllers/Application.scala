@@ -17,7 +17,7 @@ class Application @Inject()(protected val dbConfigProvider: DatabaseConfigProvid
   def login = Action {
     Ok(views.html.login())
   }
-
+  
   def signup = Action {
     Ok(views.html.create_account())
   }

@@ -8,8 +8,13 @@
 //   port: 5432,
 // });
 
-//def createUser = ???
+class UserModel {
 
-//def loginUser = ???
+def createUser = ???
 
-//def updateScore = ???
+def loginUser = ???
+
+def updateScore = ???
+
+}
+
