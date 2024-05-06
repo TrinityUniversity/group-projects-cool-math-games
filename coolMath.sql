@@ -1,14 +1,3 @@
-CREATE DATABASE coolmathgames
-    WITH
-    OWNER = bennettmach
-    ENCODING = 'UTF8'
-    LC_COLLATE = 'C'
-    LC_CTYPE = 'C'
-    LOCALE_PROVIDER = 'libc'
-    TABLESPACE = pg_default
-    CONNECTION LIMIT = -1
-    IS_TEMPLATE = False;
-
 CREATE TABLE IF NOT EXISTS public.games
 (
     gameid integer NOT NULL,
@@ -20,8 +9,8 @@ CREATE TABLE IF NOT EXISTS public.games
 CREATE TABLE IF NOT EXISTS public.users
 (
     userid integer NOT NULL,
-    username character varying COLLATE pg_catalog."default" NOT NULL,
-    email character varying COLLATE pg_catalog."default" NOT NULL,
+    username character NOT NULL,
+    email character NOT NULL,
     password character varying COLLATE pg_catalog."default",
     CONSTRAINT users_pkey PRIMARY KEY (userid)
 )

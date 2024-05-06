@@ -8,8 +8,8 @@
 //   port: 5432,
 // });
 
-def createUser = TODO
+// def createUser = TODO
 
-def loginUser = TODO
+// def loginUser = TODO
 
-def updateScore = TODO
+// def updateScore = TODO
