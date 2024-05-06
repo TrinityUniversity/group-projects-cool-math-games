@@ -1,6 +1,6 @@
-@()
+@(scores: Seq[(String, Int)])
 
-@main("homepage"){
+@main("user_profile"){
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,16 +13,11 @@
     @views.html.navbar()
     <header><img src="@routes.Assets.versioned("images/CoolNotMathGamesLogo.png")" alt="Logo" style="width:128px;height:128px;"></header>
     <div class="container">
-        <div class="game">
-            <h2>Pictionary</h2>
-            <p>Description of Game 1.</p>
-            <a href="#">Play Game 1</a>
-        </div>
-        <div class="game">
-            <h2>Wordle</h2> 
-            <p>Description of Game 2.</p>
-            <a href="#">Play Game 2</a>
-        </div>
+        <ul>
+            @for (score <- scores) {
+                <li> score._1 : score._2 </li>
+            }
+        </ul>
     </div>
 </body>
 </html>

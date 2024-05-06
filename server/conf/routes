@@ -1,14 +1,16 @@
 # Routes
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
+# for games -> make the routes the gameID
+
 
 # Home page
 GET        /                             controllers.Application.home
 GET        /login                        controllers.Application.login
 GET        /signup                       controllers.Application.signup
-# POST       /validate                   controllers.Application.validateLogin
+POST       /validate                   controllers.Application.validateLogin
 # POST       /createUser                 controllers.Application.createUser
-# GET        /games                      controllers.Application.showGames
+# GET        /games                      controllers.Application.getGames
 
 # Prefix must match `play.assets.urlPrefix`
 GET        /assets/*file                 controllers.Assets.at(file)
