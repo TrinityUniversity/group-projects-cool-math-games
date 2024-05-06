@@ -3,6 +3,7 @@
 @main("pictionary"){
     <input type="hidden" id="ws-route" value="@routes.PictionaryController.socket.absoluteURL()">
     <input type="hidden" id="createLobby" value="@routes.PictionaryController.createLobby">
+    <input type="hidden" id="joinLobby" value="@routes.PictionaryController.joinLobby">    
     <input type="hidden" id="csrfToken" value="@helper.CSRF.getToken.value">
     <input type="hidden" id="pictionary">
     <head>

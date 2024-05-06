@@ -11,7 +11,8 @@ GET        /login                        controllers.Application.login
 
 # Pictionary Pages
 GET       /pictionary                   controllers.PictionaryController.pictionary
-GET       /createLobby                  controllers.PictionaryController.createLobby
+POST      /createLobby                  controllers.PictionaryController.createLobby
+POST      /joinLobby                    controllers.PictionaryController.joinLobby
 GET       /pictionarySocket             controllers.PictionaryController.socket
 
 # Prefix must match `play.assets.urlPrefix`

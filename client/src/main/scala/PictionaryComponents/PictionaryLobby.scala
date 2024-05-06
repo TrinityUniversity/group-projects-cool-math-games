@@ -15,6 +15,11 @@ import slinky.web.html._
         println("Starting Game")
         setState(state.copy(gameStarted = true))
     }
+
+    def getPlayers() = {
+        ???
+    }
+
     def render(): ReactElement = div (
         if(!state.gameStarted){
             div(id := "container")(

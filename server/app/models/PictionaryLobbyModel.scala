@@ -20,6 +20,10 @@ object PictionaryLobbyManager {
         currentLobbies = currentLobbies.filterNot(x => x.lobbyId == lobbyId)
     }
 
+    def validateLobby(lobbyId: Int): Boolean = {
+        currentLobbies.find(x => x.lobbyId == lobbyId) != null
+    }
+
     def userJoinLobby(lobbyId: Int, newPlayer: PictionaryPlayer): Unit = {
         currentLobbies.find(x => x.lobbyId == lobbyId).get.addUser(newPlayer)
     }

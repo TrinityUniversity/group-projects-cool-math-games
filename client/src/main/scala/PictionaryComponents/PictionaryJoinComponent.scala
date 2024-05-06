@@ -6,7 +6,7 @@ import slinky.core.Component
 import slinky.core.facade.ReactElement
 import slinky.web.html._
 import slinky.core.SyntheticEvent
-import playscala.FetchJson
+import playscala.PostFetch
 import play.api.libs.json._
 import scala.scalajs.js.Thenable.Implicits._
 import scala.scalajs.js.JSON
@@ -14,12 +14,23 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 
 @react class PictionaryJoinComponent extends Component {
-    case class Props(doLogin : () => Unit,csrfToken: String)
-    case class State( joinName: String, createName: String, lobbyCode: String)
-    def initialState: State = State("","","")
+    
+    case class CreateLobby(createName: String)
+    case class JoinLobby(playerName: String, lobbyCode: Int)
+    implicit val createLobbyWrites = Json.writes[CreateLobby]
+    implicit val joinLobbyWrites = Json.writes[JoinLobby]
 
+    case class Props(doLogin : () => Unit,csrfToken: String)
+
+    case class State( joinName: String, createName: String, joinCode: String, joiningLobby: Boolean)
+    def initialState: State = State("","","",false)
+
+    var postLobbyCode: Int = 0
     val createLobbyRoute = dom.document.getElementById("createLobby").asInstanceOf[org.scalajs.dom.raw.HTMLInputElement].value
+    val joinLobbyRoute = dom.document.getElementById("joinLobby").asInstanceOf[org.scalajs.dom.raw.HTMLInputElement].value
+
     println(createLobbyRoute)
+    println(props.csrfToken)
 
 
     /* 
@@ -31,17 +42,29 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
     def createLobby() = {
         println("Creating Lobby")
-        FetchJson.fetchGet[Int](createLobbyRoute + "?playerName=" + Json.toJson(state.createName), (lobbyCode: Int) => {
-            println("Lobby Code: " + lobbyCode)
+        val createName = state.createName
+        PostFetch.fetch(createLobbyRoute,props.csrfToken,Json.toJson[CreateLobby](new CreateLobby(state.createName)), (lobbyCode: Int) => {
+            postLobbyCode = lobbyCode
+            setState(state.copy(joiningLobby = true))
         }, (e: JsError) => {
             println("Error")
         })
     }
 
-    def joinLobby() = ???
+    def joinLobby() = {
+        println("Joining Lobby")
+        PostFetch.fetch(joinLobbyRoute,props.csrfToken,Json.toJson[JoinLobby](new JoinLobby(state.joinName, state.joinCode.toInt)), (lobbyCode: Int) => {
+            postLobbyCode = lobbyCode
+            println("Got Here with: " + lobbyCode)
+            setState(state.copy(joiningLobby = true))
+        }, (e: JsError) => {
+            println("Error")
+        })
+    }
 
     def render(): ReactElement = div (
-          div(id := "container")(
+        if(!state.joiningLobby){
+            div(id := "container")(
             div(id := "lobby-container")(
             h1("Welcome to Pictionary!"),
             div(id := "join-container")(
@@ -57,12 +80,17 @@ import scala.concurrent.ExecutionContext.Implicits.global
                     input(`type` := "text", id := "joinName", placeholder := "Enter Your Name",
                         onChange := (e => setState(state.copy(joinName = e.target.value)))),
                     input(`type` := "text", id := "lobbyCode", placeholder := "Enter Lobby Code",
-                        onChange := (e => setState(state.copy(lobbyCode = e.target.value)))),
+                        onChange := (e => setState(state.copy(joinCode = e.target.value)))),
                     input(`type` := "submit",
                         onClick := (e => joinLobby())
                 )
             )
             )
         )
-    ))
+    )
+    } else if(state.joiningLobby){
+        PictionaryLobby(PictionaryLobby.Props(postLobbyCode))
+    } else {
+        PictionaryMainComponent()
+    })
 }
