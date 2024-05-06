@@ -1,6 +1,7 @@
 package models
 import PictionaryPlayer._
 import java.util.Random
+import collection.mutable
 
 object PictionaryLobbyManager {
     private var currentLobbies = List.empty[PictionaryLobby]
@@ -39,5 +40,28 @@ class PictionaryLobby(lobby: Int, pL: List[PictionaryPlayer]){
     def removeUser(playerName: String){
         playerList = playerList.filterNot(x => x.name == playerName)
     }
+
+}
+
+class PictioanryGame(lobby: Int, players: List[PictionaryPlayer]){
+
+    var roundNumber = 0
+    //Def not the best way to do this but uhhhhh idk
+    var currentDrawer = players(roundNumber)
+    var scoreMap = players.map(x => (x, 0)).toMap[PictionaryPlayer, Int]
+
+
+    def gotoNextRound() = {
+        if(!(roundNumber == players.length)){
+            //Again, strange way to do this? Could cause issues but I cant test this rn lol
+            roundNumber += 1
+            currentDrawer = players(roundNumber)
+        } else {
+            endGame()
+        }
+    }
+
+    def endGame() = ???
+
 
 }

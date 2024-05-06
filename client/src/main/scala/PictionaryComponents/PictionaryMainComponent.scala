@@ -9,16 +9,16 @@ import PictionaryComponents._
 
 @react class PictionaryMainComponent extends Component {
     
-    //val csrfToken = dom.document.getElementById("csrfToken").asInstanceOf[org.scalajs.dom.raw.HTMLInputElement].value
+    val csrfToken = dom.document.getElementById("csrfToken").asInstanceOf[org.scalajs.dom.raw.HTMLInputElement].value
 
     type Props = Unit
     case class State(inGame: Boolean, gameID: Int)
 
-    def initialState: State = State(true, 0)
+    def initialState: State = State(false, 0)
 
     def render(): ReactElement = {
         if(!state.inGame){
-            PictionaryJoinComponent(PictionaryJoinComponent.Props(() => setState(state.copy(inGame = true))))
+            PictionaryJoinComponent(PictionaryJoinComponent.Props(() => setState(state.copy(inGame = true)),csrfToken))
         } else {
             PictionaryLobby(PictionaryLobby.Props(state.gameID))
         }

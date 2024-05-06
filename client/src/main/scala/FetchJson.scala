@@ -13,29 +13,11 @@ import scala.scalajs.js.Thenable.Implicits._
 import scala.concurrent.ExecutionContext
 
 
-//   def fetchPost[A, B](url: String, csrfToken: String, 
-//       data: A, success: B => Unit, error: JsError => Unit)(implicit
-//       writes: Writes[A], reads: Reads[B], ec: ExecutionContext): Unit = {
-//     val headers = new Headers()
-//     headers.set("Content-Type", "application/json")
-//     headers.set("Csrf-Token", csrfToken)
-//     Fetch.fetch(url, RequestInit(method = HttpMethod.POST,
-//         headers = headers, body = Json.toJson(data).toString))
-//       .flatMap(res => res.text())
-//       .map { data => 
-//         Json.fromJson[B](Json.parse(data)) match {
-//           case JsSuccess(b, path) =>
-//             success(b)
-//           case e @ JsError(_) =>
-//             error(e)
-//         }
-//     }
-//   }
-
 object FetchJson {
 
+  implicit val ec = ExecutionContext.global
 
-  def fetchGet[B]( url: String, success: B => Unit, error: JsError => Unit)(implicit
+  def fetchGet[B](url: String, success: B => Unit, error: JsError => Unit)(implicit
       reads: Reads[B], ec: ExecutionContext): Unit = {
     Fetch.fetch(url)
       .flatMap(res => res.text())

@@ -12,32 +12,60 @@ import org.scalajs.dom.SVGElementInstanceList
 import org.scalajs.dom
 import slinky.web.html.placeholder
 import scala.scalajs.js
+import slinky.web.html
 
 
 @react class PictionaryGame extends Component {
+
+
+    //Initialize the websocket
+    val socketRoute = dom.document.getElementById("ws-route")
+    val socket = new dom.WebSocket(socketRoute.getAttribute("value").replace("http","ws"))
+
+    //Define the props and state for the component
     case class Props(gameID: Int)
-    case class State(mouseDownPos:(Int, Int) , drawing: Boolean, drawnLines: List[(String, String, String)],
+    case class State(mouseDownPos:(Int, Int) , drawing: Boolean, currentTurn: Boolean , drawnLines: List[(String, String, String)],
                     currentLine : (String, String, List[(Int, Int)]), drawMode: String, colorInput: String,
-                    color: String, strokeWidthValue: Int)
-    def initialState: State = State((0,0),false, List(), ("3px","",List()) ,"line", "", "#000000", 3)
+                    color: String, strokeWidthValue: Int, currentPrompt: String, guess : String)
+    def initialState: State = State((0,0), false, true , List(), ("3px","",List()) ,"line", "", "#000000", 3, "test", "")
     
-     def MouseMove(e: SyntheticMouseEvent[svg.tag.type]) = {
-        if(state.drawing){
+    //Set up the websocket to receive messages
+    socket.onmessage = (e: dom.MessageEvent) => {
+
+        val rawStr = e.data.asInstanceOf[String]
+        //println(rawStr)
+        val paths = rawStr.filter(x => x != '(').split("\\)").toList
+        print(paths)
+        var newDrawnLines: List[(String,String,String)] = List()
+            for (path <- paths){
+                val Array(strokeWidth,color,d) = path.split(",")
+                print((strokeWidth,color,d))
+                setState(state => state.copy(drawnLines = state.drawnLines :+ (strokeWidth,color,d)))
+                
+            }
+    }
+
+    def MouseMove(e: SyntheticMouseEvent[svg.tag.type]) = {
+         if(state.drawing && state.currentTurn){
+            //This is causing the overlap bug in the svg canvas
             val svgElement = e.target.asInstanceOf[dom.svg.SVG]
             val rect = svgElement.getBoundingClientRect()
             val newX = (e.clientX - rect.left).toInt
             val newY = (e.clientY - rect.top).toInt
-            println(newX + ", " + newY)
+            //println(newX + ", " + newY)
             setState(state => state.copy(currentLine = (state.currentLine._1,state.currentLine._2,state.currentLine._3 :+ ((newX,newY)))))
         }
     }
-
+    
     def MouseDown(e: SyntheticMouseEvent[svg.tag.type]) = {
-        val svgElement = e.target.asInstanceOf[dom.svg.SVG]
-        val rect = svgElement.getBoundingClientRect()
-        val startX = (e.clientX - rect.left).toInt
-        val startY = (e.clientY - rect.top).toInt
-        setState(state => state.copy(mouseDownPos = (startX,startY), drawing = true, currentLine = (state.strokeWidthValue.toString(),state.color,List())))
+        if(state.currentTurn){
+            //This one is too
+            val svgElement = e.target.asInstanceOf[dom.svg.SVG]
+            val rect = svgElement.getBoundingClientRect()
+            val startX = (e.clientX - rect.left).toInt
+            val startY = (e.clientY - rect.top).toInt
+            setState(state => state.copy(mouseDownPos = (startX,startY), drawing = true, currentLine = (state.strokeWidthValue.toString(),state.color,List())))
+        }
     }
 
     def MouseUp(e: SyntheticMouseEvent[svg.tag.type]) = {
@@ -46,7 +74,7 @@ import scala.scalajs.js
         for((x,y) <- state.currentLine._3){
             pathStr = pathStr + " L " + x + " " + y
         }
-        //socket.send((state.currentLine._1,color,pathStr).toString())
+        socket.send((state.currentLine._1,color,pathStr).toString())
         setState(state => state.copy(drawnLines = state.drawnLines :+ (state.currentLine._1,color,pathStr),
                                      drawing = false,mouseDownPos = (0,0), currentLine = ("3","",List())))
 
@@ -59,6 +87,14 @@ import scala.scalajs.js
         }
         str.dropRight(1)
         
+    }
+
+    def checkGuess() = {
+        if(state.guess == state.currentPrompt){
+            println("Good Job!")
+        } else {
+            println("Fuck you!")
+        }
     }
 
     def render(): ReactElement = div (
@@ -80,7 +116,7 @@ import scala.scalajs.js
             div(className := "color-option", style := js.Dictionary("backgroundColor" -> "blue").asInstanceOf[scala.scalajs.js.Object], onClick := (e => setState(state.copy(color = "blue")))),
             div(className := "color-option", style := js.Dictionary("backgroundColor" -> "yellow").asInstanceOf[scala.scalajs.js.Object], onClick := (e => setState(state.copy(color = "yellow")))),
             div(className := "color-option", style := js.Dictionary("backgroundColor" -> "orange").asInstanceOf[scala.scalajs.js.Object], onClick := (e => setState(state.copy(color = "orange")))),
-            div(className := "color-option", style := js.Dictionary("backgroundColor" -> "purple").asInstanceOf[scala.scalajs.js.Object], onClick := (e => setState(state.copy(color = "purple")))),
+            div(className := "color-option", style := js.Dictionary("backgroundColor" -> "black").asInstanceOf[scala.scalajs.js.Object], onClick := (e => setState(state.copy(color = "black")))),
         ),
         div(id := "prompt-container")(
             p("Enter Prompt"),
@@ -96,9 +132,10 @@ import scala.scalajs.js
             p("Greg Won with XXX Points!"),
             button("Quit Game")
         ),
-        form(id := "guess-form")(
-            input(`type` := "text", id := "guess-input", placeholder := "Enter your guess"),
-            button(`type` := "submit", id := "submit-button")("Submit Guess")
+        div(id := "guess-form")(
+            input(`type` := "text", id := "guess-input", placeholder := "Enter your guess",
+             onChange := (e => setState(state.copy(guess = e.target.value)))),
+            button(`type` := "submit", id := "submit-button", onClick := (e => checkGuess()))("Submit Guess")
         ),
         div(id := "guess-display"),
         div(id := "players-section")(
