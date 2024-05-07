@@ -1,4 +1,4 @@
-@()
+@()(implicit request: RequestHeader, flash: Flash)
 
 @main("homepage"){
 <!DOCTYPE html>
@@ -10,12 +10,13 @@
     <title>Cool Not Math Games</title>
 </head>
 <body>
-    @views.html.navbar()
-    <header><img src="@routes.Assets.versioned()" alt="" style="width:128px;height:128px;"></header>
+    @views.html.navbar()(request, flash)
+    <header><img src="@routes.Assets.versioned("images/CoolNotMathGamesLogo.png")" alt="Logo" style="width:128px;height:128px;"></header>
     <div class="container">
         <div class="login-form">
             <h2>Login</h2>
-            <form action="#" method="post">
+            <form action="@routes.Application.validateLogin" method="post">
+                @helper.CSRF.formField
                 <label for="username">Username:</label>
                 <input type="text" id="username" name="username" placeholder="Enter Username" required>
                 <label for="password">Password:</label>
@@ -23,7 +24,7 @@
                 <button type="submit">Login</button>
             </form>
             <br>
-            <span>Already have an account? Sign Up <a href="@routes.Application.signup">here</a>.</span>
+            <span>Already have an account? Sign Up <a href="@routes.Application.createUser">here</a>.</span>
         </div>
     </div>
 </body>
