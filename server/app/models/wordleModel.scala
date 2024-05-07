@@ -28,6 +28,7 @@ class wordleGame(player:WordlePlayer,game_int:Int,targetWord:String,maxAttempt:I
     var currentAttempt = 0;
     var generate_word = generateWord(dict);
 
+
     def generateWord(dict:List[String]):String ={
         var rand = new Random().nextInt(400);
         var target_word = dict(rand)
@@ -43,26 +44,47 @@ class wordleGame(player:WordlePlayer,game_int:Int,targetWord:String,maxAttempt:I
             true
         }
     }
-    def makeGuess(guess:String){
+    def makeGuess(guess:String):String ={
         if(isWord(guess) == true){
             guess
         }
         else{
+            var enterNewGuess:String = "Enter a new Guess"
             println("The guess you enter isn't a word in the dictionary we are using.");
-            println("Enter anotner guess"); 
+            enterNewGuess
         }
     }
 
-    def numberOfAttempt(maxAttempt:Int = 6,currentAttempt:Int) ={
+    def numberOfAttempt(maxAttempt:Int = 6,currentAttempt:Int):Int ={
         var restOfAttempt:Int = maxAttempt - currentAttempt;
         restOfAttempt
     }
     def isfull_wordCorrect(guess_word:String,target_word:String) ={
-
+        if(guess_word == target_word){
+            println("You got the word!")
+            true
+        }
+        else {
+            isLetter_placementCorrect(guess_word,target_word)
+            println("The some letters are corrects")
+            
+        }
     }
-    def isLetter_placementCorrect(guess_word:String,target_word:String){
-        //targetWord_charList:List[Character];
-        //guessWord_charList:List[Character];
+
+    def isLetter_placementCorrect(guess_word:String,target_word:String):Boolean ={
+        var targetWord_charList:List[Char] = target_word.toList;
+        var guessWord_charList:List[Char] = guess_word.toList;
+        var isLetter = false
+
+        for(i <- guess_word.indices){
+            for(j <- target_word.indices){
+                if(guess_word.charAt(i) == target_word.charAt(j)){
+                    isLetter = true
+                }
+            }
+        }
+
+        isLetter
     }
 
     def nextAttempt() ={
