@@ -1,6 +1,6 @@
-package models
-import WordlePlayer._
-import java.util.Random
+package models;
+import WordlePlayer._;
+import java.util.Random;
 
 class wordleGame(player:WordlePlayer,game_int:Int,targetWord:String,maxAttempt:Int = 6,currentAttempt:Int = 1,guess:String){
     var dict:List[String] = List("About","Alert","Argue","Beach","Above","Alike","Arise","Began","Abuse","Alive","Array","Begin","Actor","Allow","Aside","Begun","Acute","Alone", "Asset","Being","Admit",
