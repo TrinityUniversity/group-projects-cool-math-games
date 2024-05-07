@@ -1,4 +1,4 @@
-@(scores: Seq[(String, Int)])
+@(scores: Seq[(String, String)])(implicit request: RequestHeader, flash: Flash)
 
 @main("user_profile"){
 <!DOCTYPE html>
@@ -10,10 +10,13 @@
     <title>Cool Not Math Games</title>
 </head>
 <body>
-    @views.html.navbar()
+    @views.html.navbar()(request, flash)
     <header><img src="@routes.Assets.versioned("images/CoolNotMathGamesLogo.png")" alt="Logo" style="width:128px;height:128px;"></header>
     <div class="container">
         <ul>
+            @for(score <- scores) {
+                <li> score._1 : score._2 </li>
+            }
         </ul>
     </div>
 </body>

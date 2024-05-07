@@ -1,4 +1,4 @@
-package models;
+package models
 
 object HomepageModel {
     def validateUser(username: String, password: String): Boolean = ???
