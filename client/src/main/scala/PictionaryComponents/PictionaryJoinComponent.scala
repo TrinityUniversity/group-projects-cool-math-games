@@ -26,6 +26,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
     def initialState: State = State("","","",false)
 
     var postLobbyCode: Int = 0
+    var playerName: String = ""
     val createLobbyRoute = dom.document.getElementById("createLobby").asInstanceOf[org.scalajs.dom.raw.HTMLInputElement].value
     val joinLobbyRoute = dom.document.getElementById("joinLobby").asInstanceOf[org.scalajs.dom.raw.HTMLInputElement].value
 
@@ -45,6 +46,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
         val createName = state.createName
         PostFetch.fetch(createLobbyRoute,props.csrfToken,Json.toJson[CreateLobby](new CreateLobby(state.createName)), (lobbyCode: Int) => {
             postLobbyCode = lobbyCode
+            playerName = state.createName
             setState(state.copy(joiningLobby = true))
         }, (e: JsError) => {
             println("Error")
@@ -55,6 +57,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
         println("Joining Lobby")
         PostFetch.fetch(joinLobbyRoute,props.csrfToken,Json.toJson[JoinLobby](new JoinLobby(state.joinName, state.joinCode.toInt)), (lobbyCode: Int) => {
             postLobbyCode = lobbyCode
+            playerName = state.joinName
             println("Got Here with: " + lobbyCode)
             setState(state.copy(joiningLobby = true))
         }, (e: JsError) => {
@@ -89,7 +92,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
         )
     )
     } else if(state.joiningLobby){
-        PictionaryLobby(PictionaryLobby.Props(postLobbyCode))
+        PictionaryLobby(PictionaryLobby.Props(postLobbyCode,playerName))
     } else {
         PictionaryMainComponent()
     })

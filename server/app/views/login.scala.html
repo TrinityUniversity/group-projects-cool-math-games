@@ -11,7 +11,6 @@
 </head>
 <body>
     @views.html.navbar()
-    <header><img src="@routes.Assets.versioned()" alt="" style="width:128px;height:128px;"></header>
     <div class="container">
         <div class="login-form">
             <h2>Login</h2>
@@ -22,9 +21,8 @@
                 <input type="password" id="password" name="password" placeholder="Enter Password" required>
                 <button type="submit">Login</button>
             </form>
-            <br>
-            <span>Already have an account? Sign Up <a href="@routes.Application.signup">here</a>.</span>
-        </div>
+            <br> 
+       </div>
     </div>
 </body>
 </html>
