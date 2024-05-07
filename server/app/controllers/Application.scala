@@ -16,7 +16,7 @@ import play.api.db.slick.HasDatabaseConfigProvider
 import views.html.defaultpages.error
 
 @Singleton
-class Application @Inject() (protected val dbConfigProvider: DatabaseConfigProvider , cc: ControllerComponents)(implicit ec: ExecutionContext) 
+class Application @Inject() (protected val dbConfigProvider: DatabaseConfigProvider, cc: ControllerComponents)(implicit ec: ExecutionContext) 
         extends AbstractController(cc) with HasDatabaseConfigProvider[JdbcProfile] {
   
   private val model = new DatabaseModel(db)
@@ -34,7 +34,7 @@ class Application @Inject() (protected val dbConfigProvider: DatabaseConfigProvi
     Ok(views.html.create_account())
   }
 
-  def validateLogin = Action.async { implicit request => 
+  def validateLogin = Action { implicit request => 
     val postVals = request.body.asFormUrlEncoded
     postVals.map { args =>
       val username = args("username").head
@@ -46,13 +46,15 @@ class Application @Inject() (protected val dbConfigProvider: DatabaseConfigProvi
           Redirect(routes.Application.login).flashing("error" -> "User validation failed.")
       }
     }.getOrElse(Future.successful(Redirect(routes.Application.signup).flashing("error" -> "User creation failed.")))
+
   }
 
-  def createUser = Action.async {implicit request =>
+  def createUser = Action {implicit request =>
     val postVals = request.body.asFormUrlEncoded
     postVals.map { args =>
       val username = args("username").head
       val password = args("password").head
+
       model.createUser(username, password).map {opt =>
         if (opt)
           Redirect(routes.Application.home).withSession("username" -> username, "csrf-token" -> play.filters.csrf.CSRF.getToken.get.value)
