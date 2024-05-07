@@ -13,63 +13,67 @@ import scala.concurrent.Future
 import play.api.db.slick.DatabaseConfigProvider
 import scala.concurrent.ExecutionContext
 import play.api.db.slick.HasDatabaseConfigProvider
+import views.html.defaultpages.error
 
 @Singleton
 class Application @Inject() (protected val dbConfigProvider: DatabaseConfigProvider , cc: ControllerComponents)(implicit ec: ExecutionContext) 
-        extends AbstractController(cc) with HasDatabaseConfigProvider[JdbcProfile] {
+    extends AbstractController(cc) with HasDatabaseConfigProvider[JdbcProfile] {
   
   private val model = new DatabaseModel(db)
 
 
-  def home = Action {
+  def home = Action { implicit request =>
     Ok(views.html.homepage())
   }
 
-  def login = Action {
+  def login = Action { implicit request =>
     Ok(views.html.login())
   }
   
-  def signup = Action {
+  def signup = Action { implicit request =>
     Ok(views.html.create_account())
   }
 
   def validateLogin = Action.async { implicit request => 
-    model.validateUser(username, password).map {opt =>
-       opt match {
-        case Some(usr) =>
-          Ok(views.html.homepage()).withSession("username" -> usr.username, "userid" -> usr.userId.toString())
-        case None =>
-          Ok(views.html.create_account())
+    val postVals = request.body.asFormUrlEncoded
+    postVals.map { args =>
+      val username = args("username").head
+      val password = args("password").head 
+      model.validateUser(username, password).map {opt =>
+        if (opt)
+          Redirect(routes.Application.home).withSession("username" -> username)
+        else
+          Redirect(routes.Application.login).flashing("error" -> "User validation failed.")
       }
-    }
-
+    }.getOrElse(Future.successful(Redirect(routes.Application.signup).flashing("error" -> "User creation failed.")))
   }
 
   def createUser = Action.async {implicit request =>
-    model.createUser(username, password).map {opt =>
-      opt match {
-        case Some(usr) =>
-          Ok(views.html.homepage()).withSession("username" -> usr.username, "userid" -> usr.userId.toString())
-        case None =>
-          Ok(views.html.create_account())
+    val postVals = request.body.asFormUrlEncoded
+    postVals.map { args =>
+      val username = args("username").head
+      val password = args("password").head
+      model.createUser(username, password).map {opt =>
+        if (opt)
+          Redirect(routes.Application.home).withSession("username" -> username, "csrf-token" -> play.filters.csrf.CSRF.getToken.get.value)
+        else
+          Redirect(routes.Application.signup).flashing("error" -> "User creation failed.")
       }
-    }
+    }.getOrElse(Future.successful(Redirect(routes.Application.signup).flashing("error" -> "User creation failed.")))
   } 
 
   // if logged in will show personal profile: previously played games, highscores, etc
   def showProfile = Action.async {implicit request => 
-    val creds = request.body.asFormUrlEncoded
-    creds.map {args => 
-      val username = args("username").head
-      val userId = args("userId").head
-      model.getUserInfo(userId).map {opt =>
-        opt match {
-          case Some(info) =>
-            Ok(views.html.user_profile(info.scores, info.email)).withSession("username" -> username, "userid" -> userId)
-           case None =>
-            Ok(views.html.homepage())
-         }
-      }
-    }.getOrElse(Future.successful(Ok((views.html.homepage()))))
+    val userIDOption = request.session.get("username")
+    userIDOption.map {username => 
+      val postVals = request.body.asFormUrlEncoded
+      postVals.map { args =>
+        val username = args("username").head
+        val userId = args("userId").head
+        model.getScores(userId).map {opt =>
+            Ok(views.html.user_profile(opt)).withSession("username" -> username)
+        }
+      }.getOrElse(Future.successful(Redirect(routes.Application.home)))
+    }.getOrElse(Future.successful(Redirect(routes.Application.home)))
   }
 }

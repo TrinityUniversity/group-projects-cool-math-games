@@ -1,4 +1,4 @@
-package models
+package model
 // AUTO-GENERATED Slick data model
 /** Stand-alone Slick data model for immediate use */
 object Tables extends Tables {
@@ -19,54 +19,51 @@ trait Tables {
   def ddl = schema
 
   /** Entity class storing rows of table Scores
-   *  @param userid Database column userid SqlType(varchar), Length(20,true)
-   *  @param game Database column game SqlType(varchar), Length(20,true)
-   *  @param score Database column score SqlType(varchar), Length(20,true) */
-  case class ScoresRow(userid: String, game: String, score: String)
+   *  @param username Database column username SqlType(varchar), Length(200,true)
+   *  @param game Database column game SqlType(varchar)
+   *  @param score Database column score SqlType(bpchar) */
+  case class ScoresRow(username: String, game: String, score: Char)
   /** GetResult implicit for fetching ScoresRow objects using plain SQL queries */
-  implicit def GetResultScoresRow(implicit e0: GR[String]): GR[ScoresRow] = GR{
+  implicit def GetResultScoresRow(implicit e0: GR[String], e1: GR[Char]): GR[ScoresRow] = GR{
     prs => import prs._
-    ScoresRow.tupled((<<[String], <<[String], <<[String]))
+    ScoresRow.tupled((<<[String], <<[String], <<[Char]))
   }
   /** Table description of table scores. Objects of this class serve as prototypes for rows in queries. */
   class Scores(_tableTag: Tag) extends profile.api.Table[ScoresRow](_tableTag, "scores") {
-    def * = (userid, game, score).<>(ScoresRow.tupled, ScoresRow.unapply)
+    def * = (username, game, score).<>(ScoresRow.tupled, ScoresRow.unapply)
     /** Maps whole row to an option. Useful for outer joins. */
-    def ? = ((Rep.Some(userid), Rep.Some(game), Rep.Some(score))).shaped.<>({r=>import r._; _1.map(_=> ScoresRow.tupled((_1.get, _2.get, _3.get)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
+    def ? = ((Rep.Some(username), Rep.Some(game), Rep.Some(score))).shaped.<>({r=>import r._; _1.map(_=> ScoresRow.tupled((_1.get, _2.get, _3.get)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
 
-    /** Database column userid SqlType(varchar), Length(20,true) */
-    val userid: Rep[String] = column[String]("userid", O.Length(20,varying=true))
-    /** Database column game SqlType(varchar), Length(20,true) */
-    val game: Rep[String] = column[String]("game", O.Length(20,varying=true))
-    /** Database column score SqlType(varchar), Length(20,true) */
-    val score: Rep[String] = column[String]("score", O.Length(20,varying=true))
+    /** Database column username SqlType(varchar), Length(200,true) */
+    val username: Rep[String] = column[String]("username", O.Length(200,varying=true))
+    /** Database column game SqlType(varchar) */
+    val game: Rep[String] = column[String]("game")
+    /** Database column score SqlType(bpchar) */
+    val score: Rep[Char] = column[Char]("score")
 
     /** Foreign key referencing Users (database name scores_userid_fkey) */
-    lazy val usersFk = foreignKey("scores_userid_fkey", userid, Users)(r => r.userid, onUpdate=ForeignKeyAction.NoAction, onDelete=ForeignKeyAction.NoAction)
+    lazy val usersFk = foreignKey("scores_userid_fkey", username, Users)(r => r.username, onUpdate=ForeignKeyAction.NoAction, onDelete=ForeignKeyAction.NoAction)
   }
   /** Collection-like TableQuery object for table Scores */
   lazy val Scores = new TableQuery(tag => new Scores(tag))
 
   /** Entity class storing rows of table Users
-   *  @param userid Database column userid SqlType(varchar), PrimaryKey, Length(20,true)
-   *  @param username Database column username SqlType(varchar), Length(200,true)
+   *  @param username Database column username SqlType(varchar), PrimaryKey, Length(200,true)
    *  @param password Database column password SqlType(varchar), Length(200,true) */
-  case class UsersRow(userid: String, username: String, password: String)
+  case class UsersRow(username: String, password: String)
   /** GetResult implicit for fetching UsersRow objects using plain SQL queries */
   implicit def GetResultUsersRow(implicit e0: GR[String]): GR[UsersRow] = GR{
     prs => import prs._
-    UsersRow.tupled((<<[String], <<[String], <<[String]))
+    UsersRow.tupled((<<[String], <<[String]))
   }
   /** Table description of table users. Objects of this class serve as prototypes for rows in queries. */
   class Users(_tableTag: Tag) extends profile.api.Table[UsersRow](_tableTag, "users") {
-    def * = (userid, username, password).<>(UsersRow.tupled, UsersRow.unapply)
+    def * = (username, password).<>(UsersRow.tupled, UsersRow.unapply)
     /** Maps whole row to an option. Useful for outer joins. */
-    def ? = ((Rep.Some(userid), Rep.Some(username), Rep.Some(password))).shaped.<>({r=>import r._; _1.map(_=> UsersRow.tupled((_1.get, _2.get, _3.get)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
+    def ? = ((Rep.Some(username), Rep.Some(password))).shaped.<>({r=>import r._; _1.map(_=> UsersRow.tupled((_1.get, _2.get)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
 
-    /** Database column userid SqlType(varchar), PrimaryKey, Length(20,true) */
-    val userid: Rep[String] = column[String]("userid", O.PrimaryKey, O.Length(20,varying=true))
-    /** Database column username SqlType(varchar), Length(200,true) */
-    val username: Rep[String] = column[String]("username", O.Length(200,varying=true))
+    /** Database column username SqlType(varchar), PrimaryKey, Length(200,true) */
+    val username: Rep[String] = column[String]("username", O.PrimaryKey, O.Length(200,varying=true))
     /** Database column password SqlType(varchar), Length(200,true) */
     val password: Rep[String] = column[String]("password", O.Length(200,varying=true))
   }

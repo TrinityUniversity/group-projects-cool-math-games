@@ -12,6 +12,7 @@ class DatabaseModel(db: Database)(implicit ec: ExecutionContext) {
         val matches = db.run(Users.filter(userRow => userRow.username === username).result)
         matches.map(userRows => userRows.filter(userRow => BCrypt.checkpw(password, userRow.password)).nonEmpty)
     }
+
     def createUser(username: String, password: String): Future[Boolean] = {
         val matches = db.run(Users.filter(userRow => userRow.username === username).result)
         matches.flatMap { userRows =>
