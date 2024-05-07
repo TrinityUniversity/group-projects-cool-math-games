@@ -17,7 +17,7 @@ import views.html.defaultpages.error
 
 @Singleton
 class Application @Inject() (protected val dbConfigProvider: DatabaseConfigProvider , cc: ControllerComponents)(implicit ec: ExecutionContext) 
-    extends AbstractController(cc) with HasDatabaseConfigProvider[JdbcProfile] {
+        extends AbstractController(cc) with HasDatabaseConfigProvider[JdbcProfile] {
   
   private val model = new DatabaseModel(db)
 
