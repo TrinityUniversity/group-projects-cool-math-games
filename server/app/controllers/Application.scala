@@ -35,13 +35,8 @@ class Application @Inject() (protected val dbConfigProvider: DatabaseConfigProvi
   def signup = Action { implicit request =>
     Ok(views.html.create_account())
   }
-<<<<<<< HEAD
 
   def validateLogin = Action.async { implicit request => 
-=======
-          
-  def validateLogin = Action { implicit request => 
->>>>>>> 72ab532b895bb7ee7bd86debf4a5811a5f418527
     val postVals = request.body.asFormUrlEncoded
     postVals.map { args =>
       val username = args("username").head
