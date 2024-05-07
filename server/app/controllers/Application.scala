@@ -17,7 +17,7 @@ import views.html.defaultpages.error
 
 @Singleton
 class Application @Inject() (protected val dbConfigProvider: DatabaseConfigProvider , cc: ControllerComponents)(implicit ec: ExecutionContext) 
-    extends AbstractController(cc) with HasDatabaseConfigProvider[JdbcProfile] {
+        extends AbstractController(cc) with HasDatabaseConfigProvider[JdbcProfile] {
   
   private val model = new DatabaseModel(db)
 
@@ -40,12 +40,10 @@ class Application @Inject() (protected val dbConfigProvider: DatabaseConfigProvi
       val username = args("username").head
       val password = args("password").head 
       model.validateUser(username, password).map {opt =>
-        opt match {
-          case Some(usr) =>
-            Redirect(routes.Application.home).withSession("username" -> usr.username, "userid" -> usr.userId.toString())
-          case None =>
-            Redirect(routes.Application.login).flashing("error" -> "User validation failed.")
-        }
+        if (opt)
+          Redirect(routes.Application.home).withSession("username" -> username)
+        else
+          Redirect(routes.Application.login).flashing("error" -> "User validation failed.")
       }
     }.getOrElse(Future.successful(Redirect(routes.Application.signup).flashing("error" -> "User creation failed.")))
   }
@@ -56,31 +54,24 @@ class Application @Inject() (protected val dbConfigProvider: DatabaseConfigProvi
       val username = args("username").head
       val password = args("password").head
       model.createUser(username, password).map {opt =>
-        opt match {
-          case Some(usr) =>
-            Redirect(routes.Application.home).withSession("username" -> usr.username, "userid" -> usr.userId.toString(), "csrf-token" -> play.filters.csrf.CSRF.getToken.get.value)
-          case None =>
-            Redirect(routes.Application.signup).flashing("error" -> "User creation failed.")
-        }
+        if (opt)
+          Redirect(routes.Application.home).withSession("username" -> username, "csrf-token" -> play.filters.csrf.CSRF.getToken.get.value)
+        else
+          Redirect(routes.Application.signup).flashing("error" -> "User creation failed.")
       }
     }.getOrElse(Future.successful(Redirect(routes.Application.signup).flashing("error" -> "User creation failed.")))
   } 
 
   // if logged in will show personal profile: previously played games, highscores, etc
   def showProfile = Action.async {implicit request => 
-    val userIDOption = request.session.get("userid")
-    userIDOption.map {userID => 
+    val userIDOption = request.session.get("username")
+    userIDOption.map {username => 
       val postVals = request.body.asFormUrlEncoded
       postVals.map { args =>
         val username = args("username").head
         val userId = args("userId").head
-        model.getUserInfo(userId).map {opt =>
-          opt match {
-            case Some(info) =>
-              Ok(views.html.user_profile(info.scores, info.email)).withSession("username" -> username, "userid" -> userId)
-            case None =>
-              Redirect(routes.Application.home)
-          }
+        model.getScores(userId).map {opt =>
+            Ok(views.html.user_profile(opt)).withSession("username" -> username)
         }
       }.getOrElse(Future.successful(Redirect(routes.Application.home)))
     }.getOrElse(Future.successful(Redirect(routes.Application.home)))
