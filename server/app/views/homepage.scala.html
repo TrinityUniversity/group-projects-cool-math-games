@@ -1,4 +1,4 @@
-@()
+@()(implicit request: RequestHeader, flash: Flash)
 
 @("homepage"){
 <!DOCTYPE html>
@@ -11,13 +11,13 @@
 </head>
 <body>
   
-    @views.html.navbar()
+    @views.html.navbar()(request, flash)
     <header><img src="@routes.Assets.versioned("images/CoolNotMathGamesLogo.png")" alt="Logo" style="width:128px;height:128px;"></header>
     <div class="container">
         <div class="game">
             <h2>Pictionary</h2>
             <p>Description of Game 1.</p>
-            <a href="#">Play Game 1</a>
+            <a href="@routes.PictionaryController.pictionary">Play Game 1</a>
         </div>
         <div class="game">
             <h2>Wordle</h2> 

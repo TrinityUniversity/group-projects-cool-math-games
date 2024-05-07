@@ -2,9 +2,9 @@ package models
 
 import slick.jdbc.PostgresProfile.api._
 import scala.concurrent.ExecutionContext
-import models.Tables._
+//import models.Tables._
 import scala.concurrent.Future
-import org.mindrot.jbcrypt.BCrypt   
+//import org.mindrot.jbcrypt.BCrypt   
 
 class DatabaseModel(db: Database)(implicit ec: ExecutionContext) {
 
@@ -17,5 +17,4 @@ class DatabaseModel(db: Database)(implicit ec: ExecutionContext) {
     def getScores(userid: String): Future[Score] = ???
 
     def updateScore(userid: String, gameName: String): Future[Int] = ???
-
 }

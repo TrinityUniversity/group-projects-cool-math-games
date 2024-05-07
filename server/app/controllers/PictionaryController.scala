@@ -22,7 +22,8 @@ class PictionaryController @Inject()(cc: ControllerComponents)(implicit system: 
   
 
     def pictionary = Action { implicit request =>
-        Ok(views.html.pictionary()(request))
+        //Ok(views.html.pictionary()(request))
+        Ok("Ok that is holding the space of acutally Ok")
     }
 
     def withJsonBody[A] (f: A => Result)(implicit request: Request[AnyContent], reads: Reads[A]) = {
