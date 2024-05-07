@@ -34,7 +34,7 @@ class Application @Inject() (protected val dbConfigProvider: DatabaseConfigProvi
     Ok(views.html.create_account())
   }
 
-  def validateLogin = Action { implicit request => 
+  def validateLogin = Action.async { implicit request => 
     val postVals = request.body.asFormUrlEncoded
     postVals.map { args =>
       val username = args("username").head
@@ -49,7 +49,7 @@ class Application @Inject() (protected val dbConfigProvider: DatabaseConfigProvi
 
   }
 
-  def createUser = Action {implicit request =>
+  def createUser = Action.async {implicit request =>
     val postVals = request.body.asFormUrlEncoded
     postVals.map { args =>
       val username = args("username").head

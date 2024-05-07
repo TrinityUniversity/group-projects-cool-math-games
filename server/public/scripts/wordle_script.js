@@ -1,4 +1,4 @@
-
+console.log("loaded page")
 const dict = ["About","Alert","Argue","Beach","Above","Alike","Arise","Began","Abuse","Alive","Array","Begin","Actor","Allow","Aside","Begun","Acute","Alone", "Asset","Being","Admit",
 "Along","Audio","Below","Adopt","Alter","Audit","Bench","Adult","Among","Avoid","Billy","After","Anger","Award","Birth","Again","Angle","Aware","Black","Agent","Angry","Badly","Blame","Agree",
 "Apart","Baker","Blind","Ahead","Apple","Bases","Block","Alarm","Apply","Basic","Blood","Album"	,"Arena","Basis","Board","Boost","Buyer","China","Cover","Booth","Cable","Chose","Craft","Bound",
@@ -139,7 +139,7 @@ const gameOver = state.currentRow === 5;
 
 if(isWinner){
     alert(`You Won!!!!`);
-}else if(gameOver){
+} else if(gameOver){
     alert(`Sorry, try again! The word was ${state.secret}.`);
 }
 
