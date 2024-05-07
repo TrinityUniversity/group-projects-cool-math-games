@@ -10,8 +10,8 @@
         <body>
             <header class="site_header">
             <div id="header">
-              <button href= "/homepage.scala.html"id="homeButton">Home</button> 
-                <img src = "img of home button" alt ="HomeButton">
+              <button href= "@routes.Application.home"id="homeButton">Home</button> 
+              <img src="@routes.Assets.versioned("images/CoolNotMathGamesLogo.png")" alt="Logo" style="width:16px;height:16px;">
               <h2 id="gameTitle">Wordle</h2>
               <button id ="rulesButton">?</button>
               <button id="statisticsButton">Stats</button>
@@ -28,7 +28,7 @@
                     <div class="box"></div>
                 </div>
             </div>
-            <script sr = "./src/wordle_script.js" type = "module"></script>
+            <script src = "@routes.Assets.versioned("scripts/wordle_script.js")"></script>
         </body>
     </html>
 }
