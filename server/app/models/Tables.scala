@@ -1,4 +1,4 @@
-package model
+package models
 // AUTO-GENERATED Slick data model
 /** Stand-alone Slick data model for immediate use */
 object Tables extends Tables {
@@ -20,13 +20,13 @@ trait Tables {
 
   /** Entity class storing rows of table Scores
    *  @param username Database column username SqlType(varchar), Length(200,true)
-   *  @param game Database column game SqlType(varchar)
-   *  @param score Database column score SqlType(bpchar) */
-  case class ScoresRow(username: String, game: String, score: Char)
+   *  @param game Database column game SqlType(varchar), Length(20,true)
+   *  @param score Database column score SqlType(varchar), Length(20,true) */
+  case class ScoresRow(username: String, game: String, score: String)
   /** GetResult implicit for fetching ScoresRow objects using plain SQL queries */
-  implicit def GetResultScoresRow(implicit e0: GR[String], e1: GR[Char]): GR[ScoresRow] = GR{
+  implicit def GetResultScoresRow(implicit e0: GR[String]): GR[ScoresRow] = GR{
     prs => import prs._
-    ScoresRow.tupled((<<[String], <<[String], <<[Char]))
+    ScoresRow.tupled((<<[String], <<[String], <<[String]))
   }
   /** Table description of table scores. Objects of this class serve as prototypes for rows in queries. */
   class Scores(_tableTag: Tag) extends profile.api.Table[ScoresRow](_tableTag, "scores") {
@@ -36,10 +36,10 @@ trait Tables {
 
     /** Database column username SqlType(varchar), Length(200,true) */
     val username: Rep[String] = column[String]("username", O.Length(200,varying=true))
-    /** Database column game SqlType(varchar) */
-    val game: Rep[String] = column[String]("game")
-    /** Database column score SqlType(bpchar) */
-    val score: Rep[Char] = column[Char]("score")
+    /** Database column game SqlType(varchar), Length(20,true) */
+    val game: Rep[String] = column[String]("game", O.Length(20,varying=true))
+    /** Database column score SqlType(varchar), Length(20,true) */
+    val score: Rep[String] = column[String]("score", O.Length(20,varying=true))
 
     /** Foreign key referencing Users (database name scores_userid_fkey) */
     lazy val usersFk = foreignKey("scores_userid_fkey", username, Users)(r => r.username, onUpdate=ForeignKeyAction.NoAction, onDelete=ForeignKeyAction.NoAction)

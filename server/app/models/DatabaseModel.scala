@@ -17,7 +17,7 @@ class DatabaseModel(db: Database)(implicit ec: ExecutionContext) {
         val matches = db.run(Users.filter(userRow => userRow.username === username).result)
         matches.flatMap { userRows =>
             if(!userRows.nonEmpty) {
-            db.run(Users += UsersRow(Users.size.asInstanceOf[String], username, BCrypt.hashpw(password, BCrypt.gensalt())))
+            db.run(Users += UsersRow(username, BCrypt.hashpw(password, BCrypt.gensalt())))
                 .map(addCount => addCount > 0)
             } else Future.successful(false)
         }
@@ -26,11 +26,12 @@ class DatabaseModel(db: Database)(implicit ec: ExecutionContext) {
     def getScores(userid: String): Future[Seq[(String,String)]] = {
         db.run(
         (for {
-            scr <- Scores if scr.userid === userid
+            scr <- Scores if scr.username === userid
         } yield {
             (scr.game, scr.score)
         }).result
-    )}
+    )
+    }
 
     def updateScore(userid: String, gameName: String): Future[Int] = ???
 }
