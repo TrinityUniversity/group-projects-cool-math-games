@@ -8,14 +8,28 @@ import org.mindrot.jbcrypt.BCrypt
 
 class DatabaseModel(db: Database)(implicit ec: ExecutionContext) {
 
-    def validateUser(username: String, password: String): Future[Option[User]] = ???
+    def validateUser(username: String, password: String): Future[Boolean] = {
+        val matches = db.run(Users.filter(userRow => userRow.username === username).result)
+        matches.map(userRows => userRows.filter(userRow => BCrypt.checkpw(password, userRow.password)).nonEmpty)
+    }
+    def createUser(username: String, password: String): Future[Boolean] = {
+        val matches = db.run(Users.filter(userRow => userRow.username === username).result)
+        matches.flatMap { userRows =>
+            if(!userRows.nonEmpty) {
+            db.run(Users += UsersRow(Users.size.asInstanceOf[String], username, BCrypt.hashpw(password, BCrypt.gensalt())))
+                .map(addCount => addCount > 0)
+            } else Future.successful(false)
+        }
+    }
 
-    def getUserInfo(userid: String): Future[Option[UserExtras]] = ???
-
-    def createUser(username: String, password: String): Future[Option[User]] = ???
-
-    def getScores(userid: String): Future[Score] = ???
+    def getScores(userid: String): Future[Seq[(String,String)]] = {
+        db.run(
+        (for {
+            scr <- Scores if scr.userid === userid
+        } yield {
+            (scr.game, scr.score)
+        }).result
+    )}
 
     def updateScore(userid: String, gameName: String): Future[Int] = ???
-
 }

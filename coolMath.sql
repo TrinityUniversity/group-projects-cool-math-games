@@ -1,17 +1,16 @@
 CREATE TABLE IF NOT EXISTS public.users
 (
-    userid integer NOT NULL,
-    username character NOT NULL,
-    email character NOT NULL,
-    password character varying COLLATE pg_catalog."default",
+    userid varchar(20) NOT NULL,
+    username varchar(200) NOT NULL,
+    password varchar(200) NOT NULL,
     CONSTRAINT users_pkey PRIMARY KEY (userid)
 )
 
 CREATE TABLE IF NOT EXISTS public.scores
 (
-    userid integer NOT NULL,
-    game varchar NOT NULL,
-    score character varying COLLATE pg_catalog."default" NOT NULL,
+    userid varchar(20) NOT NULL,
+    game varchar(20) NOT NULL,
+    score varchar(20) NOT NULL,
     CONSTRAINT scores_userid_fkey FOREIGN KEY (userid)
         REFERENCES public.users (userid) MATCH SIMPLE
 )

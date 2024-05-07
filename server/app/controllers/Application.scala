@@ -45,7 +45,7 @@ class Application @Inject() (protected val dbConfigProvider: DatabaseConfigProvi
 
   }
 
-  def createUser(username: String, password: String) = Action.async {implicit request =>
+  def createUser = Action.async {implicit request =>
     model.createUser(username, password).map {opt =>
       opt match {
         case Some(usr) =>
