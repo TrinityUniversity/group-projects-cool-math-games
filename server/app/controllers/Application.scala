@@ -21,7 +21,6 @@ class Application @Inject() (protected val dbConfigProvider: DatabaseConfigProvi
   
   private val model = new DatabaseModel(db)
 
-
   def home = Action { implicit request =>
     Ok(views.html.homepage())
   }
@@ -33,7 +32,7 @@ class Application @Inject() (protected val dbConfigProvider: DatabaseConfigProvi
   def signup = Action { implicit request =>
     Ok(views.html.create_account())
   }
-
+          
   def validateLogin = Action { implicit request => 
     val postVals = request.body.asFormUrlEncoded
     postVals.map { args =>
@@ -65,6 +64,7 @@ class Application @Inject() (protected val dbConfigProvider: DatabaseConfigProvi
   } 
 
   // if logged in will show personal profile: previously played games, highscores, etc
+
   def showProfile = Action.async {implicit request => 
     val userIDOption = request.session.get("username")
     userIDOption.map {username => 
