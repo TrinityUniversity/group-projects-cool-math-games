@@ -21,6 +21,9 @@ const dict = ["About","Alert","Argue","Beach","Above","Alike","Arise","Began","A
 "Upset","Whole","Waste","Wound","Urban","Whose","Watch","Write","Usage","Woman","Water","Wrong","Usual","Train","Wheel","Wrote","Valid","World","Where","Yield","Value","Worry","Which","Young",
 "Video","Worse","While","Youth","Virus","Worst","White","Worth","Visit","Would","Vital","Voice"];
 
+//Code taken from Double D "Wordle in Javascript in 20 minutes" on Youtube
+//https://www.youtube.com/watch?v=oKM2nQdQkIU
+//Comment for merge
 const state = {
     secret: dict[Math.floor(Math.random() * dict.length)],
     grid: Array(6).fill().map(() => Array(5).fill('')),
