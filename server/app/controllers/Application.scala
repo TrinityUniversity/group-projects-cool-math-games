@@ -14,13 +14,15 @@ import play.api.db.slick.DatabaseConfigProvider
 import scala.concurrent.ExecutionContext
 import play.api.db.slick.HasDatabaseConfigProvider
 import views.html.defaultpages.error
+//protected val dbConfigProvider: DatabaseConfigProvider ,
+//(implicit ec: ExecutionContext)
+//with HasDatabaseConfigProvider[JdbcProfile] 
 
 @Singleton
 class Application @Inject() (protected val dbConfigProvider: DatabaseConfigProvider, cc: ControllerComponents)(implicit ec: ExecutionContext) 
         extends AbstractController(cc) with HasDatabaseConfigProvider[JdbcProfile] {
   
   private val model = new DatabaseModel(db)
-
 
   def home = Action { implicit request =>
     Ok(views.html.homepage())
@@ -33,8 +35,13 @@ class Application @Inject() (protected val dbConfigProvider: DatabaseConfigProvi
   def signup = Action { implicit request =>
     Ok(views.html.create_account())
   }
+<<<<<<< HEAD
 
   def validateLogin = Action.async { implicit request => 
+=======
+          
+  def validateLogin = Action { implicit request => 
+>>>>>>> 72ab532b895bb7ee7bd86debf4a5811a5f418527
     val postVals = request.body.asFormUrlEncoded
     postVals.map { args =>
       val username = args("username").head
@@ -65,6 +72,7 @@ class Application @Inject() (protected val dbConfigProvider: DatabaseConfigProvi
   } 
 
   // if logged in will show personal profile: previously played games, highscores, etc
+
   def showProfile = Action.async {implicit request => 
     val userIDOption = request.session.get("username")
     userIDOption.map {username => 

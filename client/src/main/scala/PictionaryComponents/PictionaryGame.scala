@@ -12,25 +12,23 @@ import org.scalajs.dom.SVGElementInstanceList
 import org.scalajs.dom
 import slinky.web.html.placeholder
 import scala.scalajs.js
+import play.api.libs.json.Json
 import slinky.web.html
+import shared._
+import shared.DrawPath
 
 
 @react class PictionaryGame extends Component {
 
-
-    //Initialize the websocket
-    val socketRoute = dom.document.getElementById("ws-route")
-    val socket = new dom.WebSocket(socketRoute.getAttribute("value").replace("http","ws"))
-
     //Define the props and state for the component
-    case class Props(gameID: Int)
+    case class Props(gameID: Int, socket: dom.WebSocket, players: List[String])
     case class State(mouseDownPos:(Int, Int) , drawing: Boolean, currentTurn: Boolean , drawnLines: List[(String, String, String)],
                     currentLine : (String, String, List[(Int, Int)]), drawMode: String, colorInput: String,
-                    color: String, strokeWidthValue: Int, currentPrompt: String, guess : String)
-    def initialState: State = State((0,0), false, true , List(), ("3px","",List()) ,"line", "", "#000000", 3, "test", "")
+                    color: String, strokeWidthValue: Int, currentPrompt: String, guess : String, weShowing: Boolean)
+    def initialState: State = State((0,0), false, true , List(), ("3px","",List()) ,"line", "", "#000000", 3, "test", "", false)
     
     //Set up the websocket to receive messages
-    socket.onmessage = (e: dom.MessageEvent) => {
+    props.socket.onmessage = (e: dom.MessageEvent) => {
 
         val rawStr = e.data.asInstanceOf[String]
         //println(rawStr)
@@ -74,7 +72,7 @@ import slinky.web.html
         for((x,y) <- state.currentLine._3){
             pathStr = pathStr + " L " + x + " " + y
         }
-        socket.send((state.currentLine._1,color,pathStr).toString())
+        props.socket.send(Json.stringify(Json.toJson(DrawPath(state.currentLine._1,color,pathStr))))
         setState(state => state.copy(drawnLines = state.drawnLines :+ (state.currentLine._1,color,pathStr),
                                      drawing = false,mouseDownPos = (0,0), currentLine = ("3","",List())))
 
@@ -118,11 +116,12 @@ import slinky.web.html
             div(className := "color-option", style := js.Dictionary("backgroundColor" -> "orange").asInstanceOf[scala.scalajs.js.Object], onClick := (e => setState(state.copy(color = "orange")))),
             div(className := "color-option", style := js.Dictionary("backgroundColor" -> "black").asInstanceOf[scala.scalajs.js.Object], onClick := (e => setState(state.copy(color = "black")))),
         ),
-        div(id := "prompt-container")(
+        div(id := "prompt-container" + (if(state.weShowing) ".show" else ""))(
             p("Enter Prompt"),
-            form(id := "prompt-form")(
+            div(id := "prompt-form")(
             input(`type` := "text", id := "prompt-input", placeholder := "Enter a prompt"),
-            button(`type` := "submit", id := "submit-prompt-button")("Submit Prompt")
+            button(`type` := "submit", id := "submit-prompt-button",
+                onClick := (e => ()))("Submit Prompt")
             )
         ),
         div(id := "win-container")(
@@ -139,9 +138,9 @@ import slinky.web.html
         ),
         div(id := "guess-display"),
         div(id := "players-section")(
-            div(className := "player-info")("Player 1 - Score: 100"),
-            div(className := "player-info")("Player 2 - Score: 150")
-            // Add more div(className := "player-info") calls here for more players
+            props.players.zipWithIndex.map(player => div(className := "player-info", html.key := player._2.toString())(player._1 + " - Score: 0")),
+            // div(className := "player-info")("Player 1 - Score: 0"),
+            // div(className := "player-info")("Player 2 - Score: 0")
         )
         )
     )

@@ -36,11 +36,11 @@ class PictionaryController @Inject()(cc: ControllerComponents)(implicit system: 
     }
 
     def createLobby = Action { implicit request =>
-        println("Creating Lobby")
-        println(request.body.asJson)
+        //println("Creating Lobby")
+        //println(request.body.asJson)
         withJsonBody[CreateLobby] { ud => 
             val lobbyCode:Int = PictionaryLobbyManager.createLobby(new PictionaryPlayer(ud.createName,0,false,true))
-            print(Json.toJson(lobbyCode))
+            //print(Json.toJson(lobbyCode))
             Ok(Json.toJson(lobbyCode))//.withSession("csrfToken" -> play.filters.csrf.CSRF.getToken.get.value)               
         }
     }
@@ -58,8 +58,8 @@ class PictionaryController @Inject()(cc: ControllerComponents)(implicit system: 
     }
 
     def socket = WebSocket.accept[String, String] { implicit request =>
-        println("Getting Socket")
         ActorFlow.actorRef { out =>
+            println("In here")
             PictionaryActor.props(out,pictionaryManager)    
         }    
     }

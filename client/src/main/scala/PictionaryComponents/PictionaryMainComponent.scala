@@ -17,10 +17,6 @@ import PictionaryComponents._
     def initialState: State = State(false, 0)
 
     def render(): ReactElement = {
-        if(!state.inGame){
-            PictionaryJoinComponent(PictionaryJoinComponent.Props(() => setState(state.copy(inGame = true)),csrfToken))
-        } else {
-            PictionaryLobby(PictionaryLobby.Props(state.gameID))
-        }
+        PictionaryJoinComponent(PictionaryJoinComponent.Props(() => setState(state.copy(inGame = true)),csrfToken))
     }
 }
